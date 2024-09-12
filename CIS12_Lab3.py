@@ -11,18 +11,18 @@ def input_confirmation(conf):
 
 def get_input(message):
     global usr
-    usr = input(f"{message}").strip().upper()
+    usr = str(input(f"{message}").strip().upper())
     print(f"You entered {usr}.")
     input_confirmation(usr)
 
 def get_group(message):
     global grp
-    grp = input(f"{message}").strip().upper()
+    grp = str(input(f"{message}").strip().upper())
     print(f"You entered {grp}.")
     input_confirmation(grp)
 
 def get_message(message):
-    msg = input(f"{message}").strip()
+    msg = str(input(f"{message}").strip())
     if msg != 'exit_now':
         print(f"{usr}: {msg}")
         return
