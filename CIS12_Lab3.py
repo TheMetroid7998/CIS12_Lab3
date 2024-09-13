@@ -1,4 +1,4 @@
-#import lab_chat as lc
+import lab_chat as lc
 
 def input_confirmation():
     conf = input("Is this correct? Y/N: ").strip().upper()
@@ -24,30 +24,29 @@ def get_group(message):
 
 def get_message(message):
     msg = str(input(f"{message}").strip())
-    if msg != 'exit_now':
-        print(f"{usr}: {msg}") # would have used {usr}
-        return msg
-    elif msg == 'exit_now':
-        print("You are about to leave this group. Are you sure?")
-        while not input_confirmation():
-            print("Cancellation Confirmed. (But not really because I can't code.)")
-            return msg
     return msg
 
-#def initialize_chat():
-
-usr = get_username("Enter Username: ")
-while not input_confirmation():
+def initialize_chat():
     usr = get_username("Enter Username: ")
-
-grp = get_group("Enter the group you wish to join: ")
-while not input_confirmation():
+    while not input_confirmation():
+        usr = get_username("Enter Username: ")
     grp = get_group("Enter the group you wish to join: ")
+    while not input_confirmation():
+        grp = get_group("Enter the group you wish to join: ")
+    print(f"You will be added to '{grp}'. Type to start chatting. Type '$$STOP' to leave the group.")
+    node = lc.get_peer_node(usr)
+    lc.join_group(node, grp)
+    return lc.get_channel(node, grp)
 
-print(f"You have now entered group '{grp}'. Type anything to start chatting. Type 'exit_now' to leave the group.")
+def start_chat():
+    channel = initialize_chat()
+    while True:
+        try:
+            msg = get_message(f">")
+            channel.send(msg.encode('utf_8'))
+        except (KeyboardInterrupt, SystemExit):
+            break
+    channel.send("$$STOP".encode('utf_8'))
+    print("FINISHED")
 
-while True:
-    get_message(f">")
-    continue
-
-#print("success! the program has not crashed. semantic errors may still remain.")
+start_chat()
